@@ -5,4 +5,4 @@ up:
 	docker-compose up -d
 
 down:
-	docker-compse dowm --remove-orphans
+	docker-compose down --remove-orphans
