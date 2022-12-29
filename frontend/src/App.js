@@ -1,34 +1,86 @@
 import './App.css';
 
+import {
+  Button,
+  // Upload,
+} from 'antd';
+import {
+  DownloadOutlined,
+  // UploadOutlined,
+} from '@ant-design/icons';
 
-const baseURL = process.env.ENDPOINT || 'http://localhost:8000';
+const baseUrl = process.env.ENDPOINT || 'http://localhost:8000';
 
+// const getJson = async (path) => {
+//   fetch(`${baseUrl}/${path}/`)
+//   .then(response => {
+//     if (response.ok) {
+//       return response.json();
+//     }
+//   })
+//   .then(responseJson => {
+//     console.log(responseJson);
+//   })
+//   .catch(error => {
+//     console.error(error);
+//   })
+// }
 
-const getHelloWorld = async () => {
-  console.log('clicked "Hello"')
+const downloadBlob = (blob, filename) => {
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.style.display = 'none';
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
+}
 
-  fetch(`${baseURL}/hello/`).then(response => {
+const getFile = async (path) => {
+  fetch(`${baseUrl}/${path}/`)
+  .then(response => {
     if (response.ok) {
-      return response.json();
+      return response.blob();
     }
   })
-  .then(responseJson => {
-    console.log(responseJson);
+  .then(blob => {
+    downloadBlob(blob, 'example.csv');
   })
   .catch(error => {
     console.error(error);
   })
 }
 
+const donwloadExample = () => {
+  getFile('example');
+};
+
+const uploadProps = {
+  action: `${baseUrl}/upload`,
+  onChange({ file, fileList }) {
+    if (file.status !== 'uploading') {
+      console.log(file, fileList);
+    }
+  },
+};
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <button onClick={getHelloWorld}>
-          Hello
-        </button>
-      </header>
+      <Button
+        type="primary"
+        shape="round"
+        icon={<DownloadOutlined />}
+        size="large"
+        onClick={donwloadExample}
+      >
+        Download example.csv
+      </Button>
+      {/* <Upload {...uploadProps}>
+        <Button icon={<UploadOutlined />}>Upload</Button>
+      </Upload> */}
     </div>
   );
 }

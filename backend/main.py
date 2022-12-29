@@ -18,9 +18,9 @@ app.add_middleware(
 )
 
 
-@app.get("/hello/")
-async def root():
-    return {"message": "Hello World!"}
+@app.get("/ping/")
+async def ping():
+    return {"ping": "pong!"}
 
 
 @app.get("/example/")
