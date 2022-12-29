@@ -1,6 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+
+from prediction import parse
+
 
 app = FastAPI()
 
@@ -28,3 +31,9 @@ async def example():
     filename = "example"
     filepath = f"examples/{filename}.csv"
     return FileResponse(filepath)
+
+
+@app.post("/inputs/")
+async def inputs(file: UploadFile):
+    print(parse(file.file))
+    return {"filename": file.filename}

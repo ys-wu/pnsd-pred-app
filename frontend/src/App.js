@@ -2,11 +2,11 @@ import './App.css';
 
 import {
   Button,
-  // Upload,
+  Upload,
 } from 'antd';
 import {
   DownloadOutlined,
-  // UploadOutlined,
+  UploadOutlined,
 } from '@ant-design/icons';
 
 const baseUrl = process.env.ENDPOINT || 'http://localhost:8000';
@@ -58,7 +58,7 @@ const donwloadExample = () => {
 };
 
 const uploadProps = {
-  action: `${baseUrl}/upload`,
+  action: `${baseUrl}/inputs/`,
   onChange({ file, fileList }) {
     if (file.status !== 'uploading') {
       console.log(file, fileList);
@@ -78,9 +78,9 @@ function App() {
       >
         Download example.csv
       </Button>
-      {/* <Upload {...uploadProps}>
+      <Upload {...uploadProps}>
         <Button icon={<UploadOutlined />}>Upload</Button>
-      </Upload> */}
+      </Upload>
     </div>
   );
 }
