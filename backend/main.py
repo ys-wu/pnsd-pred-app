@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile
+from fastapi import FastAPI, Form, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 
@@ -33,7 +33,8 @@ async def example():
     return FileResponse(filepath)
 
 
-@app.post("/inputs/")
-async def inputs(file: UploadFile):
+@app.post("/upload/")
+async def inputs(file: UploadFile, includesN: bool = Form()):
+    print(includesN)
     print(parse(file.file))
     return {"filename": file.filename}

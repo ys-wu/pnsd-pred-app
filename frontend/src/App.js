@@ -1,7 +1,9 @@
+import React, { useState } from 'react';
 import './App.css';
 
 import {
   Button,
+  message,
   Upload,
 } from 'antd';
 import {
@@ -57,16 +59,66 @@ const donwloadExample = () => {
   getFile('example');
 };
 
-const uploadProps = {
-  action: `${baseUrl}/inputs/`,
-  onChange({ file, fileList }) {
-    if (file.status !== 'uploading') {
-      console.log(file, fileList);
-    }
-  },
-};
-
 function App() {
+  const [fileList, setFileList] = useState([]);
+  const [uploading, setUploading] = useState(false);
+
+  const handleUpload = () => {
+    const formData = new FormData();
+    formData.append('includesN', true);
+    fileList.forEach((file) => {
+      formData.append('file', file);
+    });
+    setUploading(true);
+    fetch(`${baseUrl}/upload/`, {
+      method: 'POST',
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setFileList([]);
+        message.success('upload successfully.');
+      })
+      .catch(() => {
+        message.error('upload failed.');
+      })
+      .finally(() => {
+        setUploading(false);
+      });
+  };
+
+  const uploadProps = {
+    onRemove: (file) => {
+      const index = fileList.indexOf(file);
+      const newFileList = fileList.slice();
+      newFileList.splice(index, 1);
+      setFileList(newFileList);
+    },
+    _beforeUpload: (file) => {
+      const isMultipleFiles = false;
+      if (isMultipleFiles) {
+        setFileList([...fileList, file]);
+      } else {
+        setFileList([file]);
+      }
+
+      return false;
+    },
+    get beforeUpload_1() {
+      return this._beforeUpload;
+    },
+    set beforeUpload_1(value) {
+      this._beforeUpload = value;
+    },
+    get beforeUpload() {
+      return this._beforeUpload;
+    },
+    set beforeUpload(value) {
+      this._beforeUpload = value;
+    },
+    fileList,
+  };
+
   return (
     <div className="App">
       <Button
@@ -76,11 +128,23 @@ function App() {
         size="large"
         onClick={donwloadExample}
       >
-        Download example.csv
+      Downnload
       </Button>
-      <Upload {...uploadProps}>
-        <Button icon={<UploadOutlined />}>Upload</Button>
-      </Upload>
+
+      <div>
+        <Upload {...uploadProps}>
+          <Button icon={<UploadOutlined />}>Select</Button>
+        </Upload>
+        <Button
+          type="primary"
+          onClick={handleUpload}
+          disabled={fileList.length === 0}
+          loading={uploading}
+          style={{ marginTop: 16 }}
+        >
+          {uploading ? 'Uploading' : 'Start Upload'}
+        </Button>
+      </div>
     </div>
   );
 }
