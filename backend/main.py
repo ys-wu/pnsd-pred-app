@@ -2,7 +2,7 @@ from fastapi import FastAPI, Form, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 
-from prediction import parse
+from prediction import predict
 
 
 app = FastAPI()
@@ -36,5 +36,5 @@ async def example():
 @app.post("/upload/")
 async def inputs(file: UploadFile, includesN: bool = Form()):
     print(includesN)
-    print(parse(file.file))
+    print(predict(file.file))
     return {"filename": file.filename}
