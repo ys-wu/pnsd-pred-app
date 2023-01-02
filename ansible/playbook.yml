@@ -1,0 +1,82 @@
+---
+- hosts: nodes
+  become: true
+  tasks:
+    # - name: Install required system packages
+    #   remote_user: ubuntu
+    #   apt:
+    #     pkg:
+    #       - apt-transport-https
+    #       - ca-certificates
+    #       - curl
+    #       - software-properties-common
+    #       - python3-pip
+    #       - virtualenv
+    #       - python3-setuptools
+    #     state: latest
+    #     update_cache: true
+
+    # - name: Add Docker GPG apt key
+    #   remote_user: ubuntu
+    #   apt_key:
+    #     url: https://download.docker.com/linux/ubuntu/gpg
+    #     state: present
+
+    # - name: Verify GPG key with the fingerprint
+    #   remote_user: ubuntu
+    #   apt_key:
+    #     id: 0EBFCD88
+    #     state: present
+
+    # - name: Add Docker repository
+    #   remote_user: ubuntu
+    #   apt_repository:
+    #     repo: deb https://download.docker.com/linux/ubuntu focal stable
+    #     state: present
+
+    # - name: Update apt and install docker-ce
+    #   remote_user: ubuntu
+    #   apt:
+    #     name: docker-ce
+    #     state: latest
+    #     update_cache: true
+
+    # - name: Add user to "docker" group
+    #   remote_user: ubuntu
+    #   user:
+    #     name: ubuntu
+    #     group: docker
+    #     groups: sudo
+    #     append: yes
+
+    # - name: Install docker-compose from official GitHub repo
+    #   remote_user: ubuntu
+    #   get_url:
+    #     url: https://github.com/docker/compose/releases/download/v2.14.2/docker-compose-linux-x86_64
+    #     dest: /usr/local/bin/docker-compose
+    #     mode: u+x,g+x,o+x
+
+    # - name: Clone a Github repository
+    #   remote_user: ubuntu
+    #   git:
+    #     repo: https://github.com/ys-wu/pnsd-pred-app.git
+    #     dest: /home/ubuntu/pnsd-pred-app/
+    #     clone: yes
+
+    # - name: Copy prediction models
+    #   remote_user: ubuntu
+    #   copy:
+    #     src: ../backend/models/
+    #     dest: /home/ubuntu/pnsd-pred-app/backend/models/
+    
+    - name: Copy frontend build files
+      remote_user: ubuntu
+      copy:
+        src: ../frontend/build/
+        dest: /var/pnsd-pred-app/frontend/
+
+    # - name: Spin up backend container
+    #   remote_user: ubuntu
+    #   shell:
+    #     chdir: /home/ubuntu/pnsd-pred-app/
+    #     cmd: make up-prod

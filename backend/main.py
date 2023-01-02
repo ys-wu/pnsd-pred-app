@@ -12,6 +12,7 @@ app = FastAPI()
 origins = [
     "http://localhost",
     "http://localhost:3000",
+    "pnsd-pred.yushengwu.com",
 ]
 
 app.add_middleware(
@@ -23,19 +24,19 @@ app.add_middleware(
 )
 
 
-@app.get("/ping/")
+@app.get("/api/ping/")
 async def ping():
     return {"ping": "pong!"}
 
 
-@app.get("/example/")
+@app.get("/api/example/")
 async def example():
     filename = "example"
     filepath = f"examples/{filename}.csv"
     return FileResponse(filepath)
 
 
-@app.post("/upload/")
+@app.post("/api/upload/")
 async def inputs(file: UploadFile, includesN: bool = Form()):
     print(includesN)
 

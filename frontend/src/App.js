@@ -12,7 +12,7 @@ import {
   UploadOutlined,
 } from '@ant-design/icons';
 
-const baseUrl = process.env.ENDPOINT || 'http://localhost:8000';
+const baseUrl = process.env.ENDPOINT || 'http://localhost:8000/api';
 
 // const getJson = async (path) => {
 //   fetch(`${baseUrl}/${path}/`)

@@ -6,3 +6,6 @@ up:
 
 down:
 	docker-compose down --remove-orphans
+
+up-prod: down
+	docker-compose up backend -d
