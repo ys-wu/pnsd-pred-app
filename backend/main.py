@@ -1,6 +1,8 @@
+import io
+
 from fastapi import FastAPI, Form, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 
 from prediction import predict
 
@@ -36,5 +38,14 @@ async def example():
 @app.post("/upload/")
 async def inputs(file: UploadFile, includesN: bool = Form()):
     print(includesN)
-    print(predict(file.file))
-    return {"filename": file.filename}
+
+    df = predict(file.file)
+    stream = io.StringIO()
+    df.to_csv(stream)
+    response = StreamingResponse(
+        iter([stream.getvalue()]),
+        media_type="text/csv",
+        headers={'Content-Disposition': 'attachment;filename=dataset.csv'}
+    )
+
+    return response

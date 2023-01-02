@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 
 import {
+  Card,
   Button,
   message,
   Upload,
@@ -42,17 +43,14 @@ const downloadBlob = (blob, filename) => {
 
 const getFile = async (path) => {
   fetch(`${baseUrl}/${path}/`)
-  .then(response => {
-    if (response.ok) {
-      return response.blob();
-    }
-  })
-  .then(blob => {
-    downloadBlob(blob, 'example.csv');
-  })
-  .catch(error => {
-    console.error(error);
-  })
+    .then(response => response.blob())
+    .then(blob => {
+      downloadBlob(blob, 'example.csv');
+      message.success('download example successfully.');
+    })
+    .catch(() => {
+      message.error('download failed.');
+    })
 }
 
 const donwloadExample = () => {
@@ -74,10 +72,11 @@ function App() {
       method: 'POST',
       body: formData,
     })
-      .then((res) => res.json())
-      .then(() => {
+      .then(res => res.blob())
+      .then(blob => {
         setFileList([]);
-        message.success('upload successfully.');
+        message.success('download prediction successfully.');
+        downloadBlob(blob, 'prediction.csv');
       })
       .catch(() => {
         message.error('upload failed.');
@@ -120,18 +119,40 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <Button
-        type="primary"
-        shape="round"
-        icon={<DownloadOutlined />}
-        size="large"
-        onClick={donwloadExample}
+    <div
+      className="App"
+      style={{
+        // margin: "auto",
+        // width: "20%",
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <Card
+        title="Download a Example File"
+        style={{
+          width: 300,
+          margin: "30px",
+        }}
       >
-      Downnload
-      </Button>
+        <Button
+          type="primary"
+          shape="round"
+          icon={<DownloadOutlined />}
+          size="large"
+          onClick={donwloadExample}
+        >
+        Downnload
+        </Button>
+      </Card>
 
-      <div>
+      <Card
+        title="Prediction Configuration"
+        style={{
+          width: 300,
+          margin: "30px",
+        }}
+      >
         <Upload {...uploadProps}>
           <Button icon={<UploadOutlined />}>Select</Button>
         </Upload>
@@ -142,9 +163,9 @@ function App() {
           loading={uploading}
           style={{ marginTop: 16 }}
         >
-          {uploading ? 'Uploading' : 'Start Upload'}
+          {uploading ? 'Uploading' : 'Start Predicting'}
         </Button>
-      </div>
+      </Card>
     </div>
   );
 }
